@@ -1,176 +1,56 @@
-/* eslint-disable no-unused-vars */
-import './App.css'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
+const logar = async (username, password) => {
+ try {
+ const response = await axios.post('http://localhost:8090/api/login', {
+ username: username,
+ password: password,
+ });
+ return response.data;
+ } catch (error) {
+ throw error;
+ }
+};
 function App() {
-  const [livros, setLivros] = useState([]);
-  const [add, setAdd] = useState(true)
-  const [novoLivro, setNovoLivro] = useState({
-    titulo: '',
-    editora: '',
-    autor: '',
-    genero: ''
-  });
-  useEffect(() => {
-    fetchLivros();
-  }, []);
-  const fetchLivros = async () => {
-    try {
-      const response = await axios.get('http://localhost:8090/livros');
-      setLivros(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar Livros:', error);
-    }
-  };
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setNovoLivro((prevVeiculo) => ({
-      ...prevVeiculo,
-      [name]: value,
-    }));
-  };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      await axios.post('http://localhost:8090/livros', novoLivro);
-      fetchLivros();
-      setNovoLivro({  
-        titulo: '',
-        editora: '',
-        autor: '',
-        genero: '',
-      });
-    } catch (error) {
-      console.error('Erro ao criar o Livro:', error);
-    }
-  };
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8090/livros/${id}`);
-      fetchLivros();
-    } catch (error) {
-      console.error('Erro ao excluir o Livro:', error);
-    }
-  };
-  const handleUpdate = async (id, veiculoAtualizado) => {
-    try {
-      await axios.put(`http://localhost:8090/livros/${id}`, veiculoAtualizado);
-      fetchLivros();
-    } catch (error) {
-      console.error('Erro ao atualizar o Livro:', error);
-    }
-  };
-
-  return (
-    < div >
-      <h1>Gerenciamento de Livros</h1>
-      {
-        add ? (
-          <>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="titulo"
-                placeholder="Titulo"
-                value={novoLivro.titulo}
-                onChange={handleInputChange}
-              />
-
-              <input
-                type="text"
-                name="editora"
-                placeholder="Editora"
-                value={novoLivro.editora}
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                name="autor"
-                placeholder="Autor"
-                value={novoLivro.autor}
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                name="genero"
-                placeholder="Gênero"
-                value={novoLivro.genero}
-                onChange={handleInputChange}
-              />
-              <button type="submit">Adicionar o Livro</button>
-            </form>
-          </>
-        ) : (
-          <>
-            <form >
-              <input
-                type="text"
-                name="titulo"
-                placeholder="Titulo"
-                value={novoLivro.titulo}
-                onChange={handleInputChange}
-              />
-
-              <input
-                type="text"
-                name="editora"
-                placeholder="Editora"
-                value={novoLivro.editora}
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                name="autor"
-                placeholder="Autor"
-                value={novoLivro.autor}
-                onChange={handleInputChange}
-              />
-              <input
-                type="text"
-                name="genero"
-                placeholder="Gênero"
-                value={novoLivro.genero}
-                onChange={handleInputChange}
-              />
-              <button>Editar o Livro</button>
-
-
-            </form>
-          </>
-        )
-      }
-
-
-
-      <ul>
-        {livros.map((livro) => (
-          <li key={livro.id}>
-            {livro.titulo} {livro.editora} {livro.autor} {livro.genero}
-
-            <button onClick={() => handleDelete(livro.id)}>Excluir</button>
-
-            <button
-              onClick={() =>
-                handleUpdate(livro.id, {
-                  ...livro,
-                  titulo: novoLivro.titulo,
-                  editora: novoLivro.editora,
-                  autor: novoLivro.autor,
-                  genero: novoLivro.genero,
-
-
-                })
-              }
-            >
-              Atualizar
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div >
-  );
-
+ const [username, setUsername] = useState('');
+ const [password, setPassword] = useState('');
+ const handleLogin = async () => {
+ try {
+ const response = await logar(username, password);
+ alert(response);
+ } catch (error) {
+ console.error('Erro ao se logar:', error);
+ }
+ };
+ return (
+ <div>
+ <h1>TrêsáNo login SyStem</h1>
+ <form>
+ <label>
+ Usuário:
+ <input
+ type="text"
+ value={username}
+ onChange={(e) => setUsername(e.target.value)}
+ />
+ </label>
+ <br />
+ <label>
+ Senha:
+ <input
+ type="password"
+ value={password}
+ onChange={(e) => setPassword(e.target.value)}
+ />
+ </label>
+ <br />
+ <button type="button" onClick={handleLogin}>
+ Login
+ </button>
+ </form>
+ </div>
+ );
 }
+export default App;
 
-export default App
